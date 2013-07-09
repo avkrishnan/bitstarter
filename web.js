@@ -6,6 +6,8 @@ var infile = "index.html";
 var str = fs.readFile(infile);
 
 app.get('/', function(request, response) {
+var infile = "index.html";
+var str = fs.readFile(infile);
   response.send(str);
 });
 
