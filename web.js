@@ -2,12 +2,10 @@ var express = require('express');
 var fs = require('fs');
 
 var app = express.createServer(express.logger());
-var infile = "index.html";
-var str = fs.readFile(infile);
 
 app.get('/', function(request, response) {
 var infile = "index.html";
-var str = fs.readFile(infile);
+var str = fs.readFileSync(infile, "utf-8");
   response.send(str);
 });
 
