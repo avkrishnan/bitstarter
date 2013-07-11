@@ -21,6 +21,7 @@ References:
    - https://developer.mozilla.org/en-US/docs/JSON#JSON_in_Firefox_2
 */
 
+var sys = require ('util');
 var fs = require('fs');
 var program = require('commander');
 var cheerio = require('cheerio');
@@ -68,10 +69,37 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-        .option('-u, --url <url_file>', 'URL to verify',  URL_DEFAULT)
+        .option('-u, --url <url_link>', 'http://safe-journey-7717.herokuapp.com/')
         .parse(process.argv);
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
-} else {
-    exports.checkHtmlFile = checkHtmlFile;}
+    if(program.url)
+    {
+        rest.get(program.url).on('complete', function(result)
+        {
+           if (result instanceof Error)
+           {
+              sys.puts('Error: ' + result.message);
+              this.retry (2000);
+           }  
+           else
+           {
+
+
+
+
+
+           fs.writeFileSync("myfile.html", result);   // Added this line
+           var checkJson = checkHtmlFile("myfile.html", program.checks);
+           var outJson = JSON.stringify(checkJson, null, 4);
+           console.log(outJson);
+           }
+        });
+    } 
+    else 
+    {
+        exports.checkHtmlFile = checkHtmlFile;
+    }
+}
+
